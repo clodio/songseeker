@@ -60,9 +60,9 @@ body {
 }
 
 .button_startscan {
-    width: 250px;
+    width: 270px;
     height: 80px;
-    font-size: 2.5rem;
+    font-size: 2.4rem;
     display: inline-block;
     background: #fff;
     color: #000;
@@ -74,9 +74,9 @@ body {
 }
 
 .button_startstop {
-    width: 250px;
+    width: 270px;
     height: 80px;
-    font-size: 2.5rem;
+    font-size: 2.4rem;
     display: inline-block;
     background: #9198e5;
     color: #ffffff;
@@ -88,9 +88,9 @@ body {
 }
 
 .button_songinfo {
-    width: 250px;
+    width: 270px;
     height: 80px;
-    font-size: 2.5rem;
+    font-size: 2.4rem;
     display: none;
     background: #fff;
     color: #000;
