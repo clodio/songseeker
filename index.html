@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <h2>SongSeeker</h2>
+    <img src="./logo_main.png" alt="SongSeeker"/><br />
 
     <div id="qr-reader">
         <button id="cancelScanButton" class="button">Cancel Scan</button>
@@ -38,10 +38,17 @@
     <button id="startScanButton" class="button_startscan">Start Scan</button>
     <br />
     <button id="startstop-video" class="button_startstop">Play</button>
-
-    <div id="videoid">Video ID: <span id="video-id"></span></div>
-    <div id="videotitle">Video Title: <span id="video-title"></span></div>
-    <div id="videoduration">Video Duration: <span id="video-duration"></span></div>
+    <br />
+    <button id="songInfoButton" class="button_songinfo">Show Song Info</button>
+    
+    <div id="songInfoDisplay">
+        <div id="videoid">Video ID: <span id="video-id"></span></div>
+        <div id="videotitle">Video Title: <span id="video-title"></span></div>
+        <div id="videoduration">Video Duration: <span id="video-duration"></span></div>
+        <div id="videoartist">Video Artist: <span id="video-artist"></span></div>
+        <div id="videourl">Video URL: <span id="video-url"></span></div>
+        <div id="videoyear">Video Year: <span id="video-year"></span></div>
+    </div>
 
     <hr />
     <br/>
@@ -80,6 +87,8 @@
             <div>
                 <input type="checkbox" id="songinfo" name="songinfo" />
                 <label for="songinfo">Show song info</label>
+                <input type="checkbox" id="songInfoButonParam" name="songInfoButonParam" />
+                <label for="songInfoButonParam">Show song info button</label>
                 <br/>
                 <input type="checkbox" id="cookies" name="cookies" />
                 <label for="cookies">Show cookies</label>

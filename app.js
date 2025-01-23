@@ -47,8 +47,30 @@ document.addEventListener('DOMContentLoaded', function () {
                   console.error("Failed to fetch CSV:", error);
                 }
             }
-            else {
-                console.log("Invalid Hitster URL:", decodedText);
+            else if (decodedText != "") {
+                // if decodedText is just youtube id
+                youtubeURL = "https://www.youtube.com/watch?v=" + song['URL'];
+                try {
+                    const csvContent = await getCachedCsv(`/songseeker-songs.csv`);
+                    const song = lookupSongs(youtubeURL, csvContent);
+                    if (song) {
+                        // Handle YouTube link obtained from the CSV
+                        console.log(`YouTube Link from CSV: ${song}`);
+                        youtubeURL = "https://www.youtube.com/watch?v=" + song['URL'];
+                        document.getElementById('video-id').textContent = song['#Card']; 
+                        document.getElementById('video-title').textContent = song['Title']; 
+                        document.getElementById('video-artist').textContent = song['Artist']; 
+                        document.getElementById('video-url').textContent = youtubeURL;
+                        document.getElementById('video-year').textContent = song['Year']; 
+                        // Example: player.cueVideoById(parseYoutubeLink(youtubeLink).videoId);
+                    }
+                } catch (error) {
+                  console.error("Failed to fetch CSV:", error);
+                }
+                
+            }
+            else{
+                console.log("Invalid Link URL:", decodedText);
             }
         }
 
@@ -101,7 +123,40 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Looks up the YouTube link in the CSV content based on the ID
-    function lookupYoutubeLink(id, csvContent) {
+    function lookupSongs(id, csvContent) {
+        const headers = csvContent[0]; // Get the headers from the CSV content
+        const cardIndex = headers.indexOf('Card#');
+        const urlIndex = headers.indexOf('URL');
+        const titleIndex = headers.indexOf('Title');
+        const artistIndex = headers.indexOf('Artist');
+        const yearIndex = headers.indexOf('Year');
+
+        const lines = csvContent.slice(1); // Exclude the first row (headers) from the lines
+
+        if (cardIndex === -1 || urlIndex === -1) {
+            throw new Error('Card# or URL column not found');
+        }
+
+        for (let row of lines) {
+            const csvId = row[urlIndex];
+            if (csvId === id) {
+                console.log(`Song info from CSV: ${row}`);
+                var song = {}
+                song['Card#'] = row[cardIndex]
+                song['URL'] = row[urlIndex]
+                song['Title'] = row[titleIndex]
+                song['Artist'] = row[artistIndex]
+                song['Year'] = row[yearIndex]
+                return song
+
+            }
+        }
+        return null; // If no matching ID is found
+
+    }
+
+     // Looks up the YouTube link in the CSV content based on the ID
+     function lookupYoutubeLink(id, csvContent) {
         const headers = csvContent[0]; // Get the headers from the CSV content
         const cardIndex = headers.indexOf('Card#');
         const urlIndex = headers.indexOf('URL');
@@ -122,6 +177,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return null; // If no matching ID is found
 
     }
+
 
     // Could also use external library, but for simplicity, we'll define it here
     function parseCSV(text) {
@@ -218,7 +274,7 @@ function onPlayerReady(event) {
 // Display video information when it's cued
 function onPlayerStateChange(event) {
     if (event.data == YT.PlayerState.CUED) {
-        document.getElementById('startstop-video').style.background = "green";
+        document.getElementById('startstop-video').style.background = "#9198e5";
         // Display title and duration
         var videoData = player.getVideoData();
         document.getElementById('video-title').textContent = videoData.title;
@@ -236,10 +292,10 @@ function onPlayerStateChange(event) {
         }
     }
     else if (event.data == YT.PlayerState.PLAYING) {
-        document.getElementById('startstop-video').style.background = "red";
+        document.getElementById('startstop-video').style.background = "#e66465";
     }
     else if (event.data == YT.PlayerState.PAUSED | event.data == YT.PlayerState.ENDED) {
-        document.getElementById('startstop-video').style.background = "green";
+        document.getElementById('startstop-video').style.background = "#9198e5";
     }
     else if (event.data == YT.PlayerState.BUFFERING) {
         document.getElementById('startstop-video').style.background = "orange";
@@ -325,21 +381,40 @@ document.getElementById('startScanButton').addEventListener('click', function() 
     });
 });
 
-document.getElementById('songinfo').addEventListener('click', function() {
-    var cb = document.getElementById('songinfo');
-    var videoid = document.getElementById('videoid');
-    var videotitle = document.getElementById('videotitle');
-    var videoduration = document.getElementById('videoduration');
-    if(cb.checked == true){
-        videoid.style.display = 'block';
-        videotitle.style.display = 'block';
-        videoduration.style.display = 'block';
+document.getElementById('songInfoButton').addEventListener('click', function() {
+    var songInfoDisplay = document.getElementById('songInfoDisplay');
+    var songInfoButton = document.getElementById('songInfoButton');
+    
+    
+    if(songInfoDisplay.style.display === 'none' ||  songInfoDisplay.style.display === ''){
+        songInfoButton.textContent = "Hide Song Info"
+        songInfoDisplay.style.display = 'block';
     } else {
-        videoid.style.display = 'none';
-        videotitle.style.display = 'none';
-        videoduration.style.display = 'none';
+        songInfoButton.textContent = "Show Song Info"
+        songInfoDisplay.style.display = 'none';
     }
 });
+
+document.getElementById('songinfo').addEventListener('click', function() {
+    var songInfoDisplay = document.getElementById('songInfoDisplay');
+    
+    if(songInfoDisplay.style.display === 'none' ||  songInfoDisplay.style.display === ''){
+        songInfoDisplay.style.display = 'block';
+    } else {
+        songInfoDisplay.style.display = 'none';
+    }
+});
+
+document.getElementById('songInfoButonParam').addEventListener('click', function() {
+    var songInfoButton = document.getElementById('songInfoButton');
+    
+    if(songInfoButton.style.display === 'none' ||  songInfoButton.style.display === ''){
+        songInfoButton.style.display = 'inline-block';
+    } else {
+        songInfoButton.style.display = 'none';
+    }
+});
+
 
 document.getElementById('cancelScanButton').addEventListener('click', function() {
     qrScanner.stop(); // Stop scanning after a result is found
