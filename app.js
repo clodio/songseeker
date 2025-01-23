@@ -386,10 +386,10 @@ document.getElementById('songInfoButton').addEventListener('click', function() {
     
     
     if(songInfoDisplay.style.display === 'none' ||  songInfoDisplay.style.display === ''){
-        songInfoButton.textContent = "Hide Song Info"
+        songInfoButton.textContent = "Hide Info"
         songInfoDisplay.style.display = 'block';
     } else {
-        songInfoButton.textContent = "Show Song Info"
+        songInfoButton.textContent = "Show Info"
         songInfoDisplay.style.display = 'none';
     }
 });
