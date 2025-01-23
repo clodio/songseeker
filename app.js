@@ -47,31 +47,30 @@ document.addEventListener('DOMContentLoaded', function () {
                   console.error("Failed to fetch CSV:", error);
                 }
             }
+        }
         else if (decodedText != "") {
             // if decodedText is just youtube id
-            youtubeURL = "https://www.youtube.com/watch?v=" + song['URL'];
+            youtubeURL = "https://www.youtube.com/watch?v=" + decodedText;
             try {
-                const csvContent = await getCachedCsv(`/songseeker-songs.csv`);
+                const csvContent = await getCachedCsv(`./songseeker-songs.csv`);
                 const song = lookupSongs(youtubeURL, csvContent);
                 if (song) {
+                    youtubeURL = song['URL']; 
                     // Handle YouTube link obtained from the CSV
                     console.log(`YouTube Link from CSV: ${song}`);
-                    youtubeURL = "https://www.youtube.com/watch?v=" + song['URL'];
                     document.getElementById('video-id').textContent = song['#Card']; 
                     document.getElementById('video-title').textContent = song['Title']; 
                     document.getElementById('video-artist').textContent = song['Artist']; 
-                    document.getElementById('video-url').textContent = youtubeURL;
+                    document.getElementById('video-url').innerHTML = '<a href="' + youtubeURL + '" target="_blank">' + youtubeURL + '<a>' ;
                     document.getElementById('video-year').textContent = song['Year']; 
                     // Example: player.cueVideoById(parseYoutubeLink(youtubeLink).videoId);
                 }
             } catch (error) {
                 console.error("Failed to fetch CSV:", error);
             }
-            
         }
         else{
             console.log("Invalid Link URL:", decodedText);
-        }
         }
 
         console.log(`YouTube Video URL: ${youtubeURL}`);
