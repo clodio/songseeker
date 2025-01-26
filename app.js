@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const csvContent = await getCachedCsv(`./songseeker-songs.csv`);
                 const song = lookupSongs(youtubeURL, csvContent);
                 if (song) {
-                    youtubeURL = song['URL']; 
+                    youtubeURL = song['URL'];
                     // Handle YouTube link obtained from the CSV
                     console.log(`YouTube Link from CSV: ${song}`);
                     document.getElementById('video-id').textContent = song['#Card']; 
